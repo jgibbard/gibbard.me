@@ -4,10 +4,11 @@ description: There has been a lot in the news recently about websites being ‘h
 main_image: key.svg
 
 # Website password security
-This post was written on 17 June 2012. Can you believe that over 5 years later password security has got worse, not better! The information below is still valid, just a little out of date! If you are interested in up to date information in this area check out <a href="https://www.troyhunt.com/" target="_blank">Troy Hunt’s blog</a>.
+This post was written on 17 June 2012. Can you believe that over 5 years later password security has got worse, not better! The information below is still valid, just a little out of date! If you are interested in up to date information in this area check out [Troy Hunt’s blog](https://www.troyhunt.com/){target="_blank"}.
+
 <hr/>
 
-There has been a lot in the news recently about websites being ‘hacked’ and login details being stolen. The most recent high profile case was<a href="http://www.bbc.co.uk/news/technology-18338956" target="_blank"> linkedin where over 6 million passwords were obtained.</a> With these large scale security breaches becoming increasingly common it may be worth spending a few minutes to learn about how websites store passwords and what you can do to protect yourself from having your passwords stolen.
+There has been a lot in the news recently about websites being ‘hacked’ and login details being stolen. The most recent high profile case was [linkedin where over 6 million passwords were obtained](https://www.bbc.co.uk/news/technology-18338956){target="_blank"}. With these large scale security breaches becoming increasingly common it may be worth spending a few minutes to learn about how websites store passwords and what you can do to protect yourself from having your passwords stolen.
 
 Most websites store login details in a large database located on a database server. Database servers are normally well protected, however as seen recently they cannot be assumed to be completely secure. Once a database is breached the method in which the login data was stored becomes very important, and determines how easy it is for the hackers to gain access to people’s passwords.Probably the best way to explain how websites store passwords is through a series of examples.
 
@@ -20,7 +21,7 @@ If a hacker was to gain access to the database they would immediately have acces
 
 ## Case 2:  Storing the password as a hash
 ### What is a hash?
-A hash takes any string of characters, of any length, and converts it to a fixed length string. When hashing passwords a special type of hash is used; this is known as a <a href="http://en.wikipedia.org/wiki/Cryptographic_hash_function" target="_blank">Cryptographic hash.</a> To put it simply with an ideal cryptographic hash it is easy to create a hash from a password, but practically impossible to obtain the password from the hash. Also a very small change in the password will result in a completely different hash.
+A hash takes any string of characters, of any length, and converts it to a fixed length string. When hashing passwords a special type of hash is used; this is known as a [Cryptographic hash](https://en.wikipedia.org/wiki/Cryptographic_hash_function){target="_blank"}. To put it simply with an ideal cryptographic hash it is easy to create a hash from a password, but practically impossible to obtain the password from the hash. Also a very small change in the password will result in a completely different hash.
 
 The are many different hashing algorithms available including MD5, SHA-1 and SHA-2. Some vulnerabilities have been found with MD5 and SHA-1, however at time of writing SHA-2 is still a good option.
 
