@@ -1,6 +1,6 @@
 title: Bluetooth controlled LED flashing Frisbee
 date: 2014/05/20
-description: 
+description: A few friends and I decided it would be a good idea to make a light-up Frisbee so we could continue playing with it after it became dark. I decided to take it a step further and add control of the lights by via Bluetooth!
 main_image: bluetooth.svg
 
 A few friends and I decided it would be a good idea to make a light-up Frisbee so we could continue playing with it after it became dark. The first version featured 8 LEDs located around the edge of the Frisbee. Each LED was connected in parallel via a resistor to a small LiPo battery. This worked well and looked really good in the dark.
