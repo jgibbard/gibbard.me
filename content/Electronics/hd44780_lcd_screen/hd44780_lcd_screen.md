@@ -3,7 +3,6 @@ date: 2013/09/13
 description: The Hitachi HD44780 is an LCD screen controller used to control small alphanumeric LCD displays. This post details how to control these displays.
 main_image: terminal.svg
 
-# Using an HD44780 alphanumeric LCD screen
 The Hitachi HD44780 is an LCD screen controller used to control small alphanumeric LCD displays. Many cheaper displays don’t actually use the HD44780 IC. However, they use the same pin-out and control scheme, and therefore can be operated in the same manner.
 
 ![](hd44780_screen.jpg){.image_responsive .image_shadow .image_500px}

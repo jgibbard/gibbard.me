@@ -3,7 +3,6 @@ date: 2017/12/03
 description: Some companies use an isolated network or even the complete lack of a network as a security measure to protect from unauthorized access. Working on these systems can be a struggle but it is still possible, and perhaps even more important, to use a proper version control tool like Git.
 main_image: git.svg
 
-# Using Git offline
 Some companies use an isolated network or even the complete lack of a network as a security measure to protect from unauthorized access. Working on these systems can be a struggle but it is still possible, and perhaps even more important, to use a proper version control tool like Git.
 
 By design Git works quite happily with no remote repository. You can branch, stage, and commit files just like normal.

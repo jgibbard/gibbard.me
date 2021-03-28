@@ -3,7 +3,6 @@ date: 2012/06/17
 description: There has been a lot in the news recently about websites being ‘hacked’ and login details being stolen. Once a site is breached the method in which the login data was stored becomes very important, and determines how easy it is for the hackers to gain access to people’s passwords.
 main_image: key.svg
 
-# Website password security
 This post was written on 17 June 2012. Can you believe that over 5 years later password security has got worse, not better! The information below is still valid, just a little out of date! If you are interested in up to date information in this area check out [Troy Hunt’s blog](https://www.troyhunt.com/){target="_blank"}.
 
 <hr/>

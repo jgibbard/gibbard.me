@@ -3,7 +3,6 @@ date: 2019/11/10
 description: Instructions for downloading a local copy of the CentOS 7 repositories. This is useful when you have an isolated development network or many local clients requiring updates.
 main_image: centos.svg
 
-# Downloading CentOS 7 repositories
 Having a local copy of the yum repositories for CentOS can be useful when you have an isolated development network or many local clients requiring updates.
 
 The following script will download a full copy of all the packages available in the normal CentOS 7 and EPEL repositories. At time of writing the current size is about 46 GB.

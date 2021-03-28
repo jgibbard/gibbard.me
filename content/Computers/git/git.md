@@ -2,7 +2,6 @@ title: Git Cheatsheet
 date: 2020/12/23
 description: Dear future self, if you are reading this it looks like you have forgotten how to do something in Git again... Don't worry, it happens; this page has been created just for you!
 main_image: git.svg
-# Git Cheatsheet
 
 ## Creating and cloning a repository
 ### Clone an existing repository from a URL
