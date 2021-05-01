@@ -254,6 +254,8 @@ python3 -m http.server
 ```
 Go to http://localhost:8000 to see the local website.
 
+You can see an example of what this should look like [here](test_map.html){target="_blank}. Note that I am only serving tiles for zoom level 10, 11, and 12.
+
 **Note:** The if you have followed the instructions you currently have two tile servers running: the actual docker based tile server on port 8080, and the python static webserver on port 8000 hosting just the tiles that were rendered and downloaded. You can shut down the docker based tile server without effecting this python static webserver (See Step 6).
 
 ### Step 6 - Cleaning up (Optional)
