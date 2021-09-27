@@ -172,7 +172,7 @@ if __name__ == "__main__":
             for y in range(0,2**zoom):
                 download_url(zoom, x, y)
 
-    for zoom in range(7, int(args.z)+1):
+    for zoom in range(7, int(args.Z)+1):
         xtile_min, ytile_min = deg2num(float(args.y), float(args.x), zoom)
         xtile_max, ytile_max = deg2num(float(args.Y), float(args.X), zoom)
 
