@@ -3,7 +3,7 @@
     "theme":"basic",
     "output_directory":"/var/www/gibbard.me/html",
     "default_author":"James Gibbard",
-    "website_name":"$ /james/notes",
+    "website_name":"/james/notes",
     "website_description": "Electronics, Computers, and DSP.",
     "category_page_post_limit":10,
     "index_page_post_limit":10
