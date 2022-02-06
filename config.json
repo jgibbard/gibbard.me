@@ -6,5 +6,7 @@
     "website_name":"/james/notes",
     "website_description": "Electronics, Computers, and DSP.",
     "category_page_post_limit":10,
-    "index_page_post_limit":10
+    "index_page_post_limit":10,
+    "exclude_category_from_home": "Snippets",
+    "exclude_category_from_individual_page": "Snippets"
 }
