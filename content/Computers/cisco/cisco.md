@@ -1,6 +1,7 @@
 title: Cisco IOS Cheatsheet
 date: 2022/03/20
 description: Cheatsheet for configuring Cisco routers and switches.
+main_image: cisco.svg
 
 ## 1.0 General
 ```bash
@@ -171,7 +172,29 @@ exit
 
 When logged in over SSH use command ```terminal monitor``` to enable log messages to appear in the terminal for that session. (Log messages are on by default for direct serial consoles.)
 
-### 2.5 Getting access to a router if the password is lost
+### 2.5 Set up a static route
+
+```bash
+enable
+# Show IP Routes
+show ip route
+# Add static route
+configure terminal
+ip route destination_network subnet_mask next_hop_neighbour 
+# E.g. route traffic for 192.168.0.X to 10.0.4.2
+ip route 192.168.0.0 255.255.255.0 10.0.4.2
+```
+
+You can also specify the exit interface of the router, but this should typically only be done if there is a point to point connection from the interface to another router.
+```bash
+enable
+configure terminal
+ip route destination_network subnet_mask exit_interface 
+# E.g. route traffic for 192.168.0.X to FastEthernet0/1
+ip route 192.168.0.0 255.255.255.0 f0/1
+```
+
+### 2.6 Getting access to a router if the password is lost
 Connect to device via console port, and power cycle the device. Send a ```<BREAK>``` signal via serial to halt the boot process and enter ROM monitor (rommon) mode.
 
 The Configuration Register sets boot options for the device. The "normal" configuration register value is ```0x2102```. This means load the IOS image specifed in startup-config file and then load the configuration from the startup-config.
