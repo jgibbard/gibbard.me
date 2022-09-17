@@ -104,3 +104,27 @@ Once booted run:
 ```bash
 sudo yum reinstall selinux-policy-targeted
 ```
+
+#### Find Commands
+
+```bash
+# Recursively search for <string> in any file
+grep -ri "<string>" .
+# Recursively search for file or directory with <string> in file name
+find . -name "*<string>*"
+```
+
+#### Python Webserver
+```bash
+python -m SimpleHTTPServer 8080
+python3 -m http.server 8080
+```
+
+#### Useful Aliases
+Add aliases to: `~/.bashrc`
+```bash
+# Save last command
+alias savecmd='echo $(history -p !!) >> ~/saved_commands.txt'
+# Search history (If Ctrl-R fails)
+alias gh='history | grep'
+```
