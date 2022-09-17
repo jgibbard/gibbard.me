@@ -1,5 +1,5 @@
 title: Useful Linux Commands
-date: 2022/03/05
+date: 2022/09/17
 
 #### Add a user to a group
 ```bash
@@ -96,3 +96,11 @@ Host 10.0.4.1
 sudo chmod go-w ~/.ssh/config
 ```
 Can use ```Host *``` to disable on all hosts, but not typically a good idea.
+
+#### Fix "Failed To Load Selinux Policy, Freezing" error
+Add `selinux=0` to the end of the linux16 grub boot command to allow you to boot the machine.
+
+Once booted run:
+```bash
+sudo yum reinstall selinux-policy-targeted
+```
