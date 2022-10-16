@@ -283,6 +283,7 @@ docker volume create openstreetmap-data
 # Pull down my slightly modified docker container
 git clone https://github.com/jgibbard/openstreetmap-tile-server.git
 cd openstreetmap-tile-server
+git checkout v1.6.0_english_tags
 # Build the docker container
 docker build -t jg/openstreetmap-tile-server:v1.6.0_english_tags .
 ```
