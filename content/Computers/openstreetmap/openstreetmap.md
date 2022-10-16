@@ -50,6 +50,18 @@ Two common sources are:
  * [Official map of the entire planet](https://planet.openstreetmap.org/){target="_blank} 
  * [Map data for specific continents or countries](https://download.geofabrik.de/index.html){target="_blank}
 
+Processing the full world map can take a very long time and typically needs a PC with at least 64GB of ram. If you can't use the country or continent specific maps because you want a map that spans multiple regions, then you can download the `.osm.pbf` file for the full planet and use `Osmconvert` to "crop" the map with a bounding box. [This](https://tools.geofabrik.de/calc/){target="_blank} website can be used to generate the bounding box. Alternatively you can also merge together multiple `osm.pbf` maps using `Osmconvert`.
+```sh
+sudo apt-get install osmctools
+
+# Crop map
+# -b=left,bottom,right,top
+osmconvert planet-221010.osm.pbf -b=-11.9,35.73,57.84,61.15 -o=partial_europe.osm.pbf --complete-ways --verbose
+
+# Merge maps
+osmconvert great-britain-latest.osm.pbf france-latest.osm.pbf-o=gb_fr.osm.pbf --verbose
+```
+
 For this example we will download the map of Great Britain.
 ```sh
 mkdir ~/maps
