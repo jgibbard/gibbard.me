@@ -68,7 +68,7 @@ The `expr` function performs mathematical operations on string variables that ar
 set a 10
 set b 20
 expr $a * $b
-expr ($a * $b) * 10
+expr ($a * $b) + 10
 ```
 ```
 > 200
