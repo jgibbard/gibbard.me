@@ -1,8 +1,9 @@
 title: Using OpenStreetMap Offline 
-date: 2021/03/27
+date: 2022/10/22
 description: Setting up OpenStreetMap for use as part of an offline application can be a bit confusing. This article covers the full process.
 main_image: map.svg
 
+(Updated Oct 2022)
 ## Introduction
 OpenStreetMap is a collaborative effort to create a free map of the world. It can be viewed online for free [here](https://www.openstreetmap.org){target="_blank}.
 
@@ -70,7 +71,7 @@ wget https://download.geofabrik.de/europe/great-britain-latest.osm.pbf
 ```
 
 ### Step 2 - Set up a tile server
-Setting up a tile server is a relatively involved process, but fortunately [Alexander Overvoorde](https://while.io/){target="_blank} has made a [docker container](https://github.com/Overv/openstreetmap-tile-server){target="_blank} that has everything set up and ready to go!
+Setting up a tile server is a relatively involved process, but fortunately Alexander Overvoorde has made a [docker container](https://github.com/Overv/openstreetmap-tile-server){target="_blank} that has everything set up and ready to go!
 
 First create a volume to store the map data:
 ```sh
@@ -84,23 +85,26 @@ Next run the tile server and import the map. Depending on the size of your PBF f
 ```sh
 # For the fastest possible import time, increase the number of threads to
 # match what is available on your CPU.
-# You can also adjust increase the amount of memory available to OSM2PGSQL.
-docker run -v </full/path/to>/maps/great-britain-latest.osm.pbf:/data.osm.pbf \
-           -v openstreetmap-data:/var/lib/postgresql/12/main \
-           -e THREADS=2 \
+# You should also increase the amount of memory available to OSM2PGSQL to 
+# about 75% of your RAM.
+docker run -v </full/path/to>/maps/great-britain-latest.osm.pbf:/data/region.osm.pbf \
+           -v openstreetmap-data:/data/database/ \
+           -e THREADS=4 \
            -e "OSM2PGSQL_EXTRA_ARGS=-C 4096" \
-           overv/openstreetmap-tile-server:v1.6.0 import
+           overv/openstreetmap-tile-server:2.2.0 import
 ```
+
+If importing a very large `osm.pbf` file then also add the `-e "FLAT_NODES=enabled"` option to the docker command.
 
 Once the map has been imported you can run the tile server:
 ```sh
 # Adjust the threads and memory as required
 docker run -p 8080:80 \
-           -v openstreetmap-data:/var/lib/postgresql/12/main -d \
-           -e THREADS=2 \
+           -v openstreetmap-data:/data/database/ -d \
+           -e THREADS=4 \
            -e "OSM2PGSQL_EXTRA_ARGS=-C 4096" \
            --shm-size=256m \
-           overv/openstreetmap-tile-server:v1.6.0 run
+           overv/openstreetmap-tile-server:2.2.0 run
 ```
 
 The tile server has a built in example webpage that lets you browse the map straight away. Go to http://localhost:8080 to see the map. It will take a little while to load initially.
@@ -110,25 +114,33 @@ Once the map loads, zoom in on the UK. Each time the map is panned or zoomed the
 ### Step 3 - Pre-rendering part of the map {: #step3}
 Rather than immediately using a python script to just download all the required tiles, I have found the fastest way to get an offline map is to use a pre-rendering script inside the docker container itself, and then to use python to download the tiles.
 
-First we need to identify the area we want to render. [This](https://tools.geofabrik.de/calc/){target="_blank} website lets you draw a box anywhere in the world, and estimates the disk space required to store the tiles for various levels of zoom. Once you have selected the area you want go to the *CD* tab on the right hand side of the page and note the coordinates listed under "Osmosis Copy"
-
-```python
-left=-1.6 bottom=50.57 right=-1.05 top=50.78
-```
-Next, get a bash terminal inside the tile server docker container:
+Fist, get a bash terminal inside the tile server docker container:
 ```sh
 docker exec -it  <docker_container_name> /bin/bash
 ```
 
-Then, once inside the docker container download a pre-rendering script and run it over the area you want to download.
+Inside the container there is a program called `render_list` which can render the tiles
+```sh
+# E.g render zoom levels 0 to 6 for the whole world using 2 treads (-n 2)
+render_list --all -z 0 -Z 6 -n 2
+```
+
+Pre-rendering tiles for whole world to higher zoom levels will start to take up a lot of storage. To avoid this, you can pre-render just a specific region. [This](https://tools.geofabrik.de/calc/){target="_blank} website lets you draw a box anywhere in the world, and estimates the disk space required to store the tiles for various levels of zoom. Once you have selected the area you want go to the *CD* tab on the right hand side of the page and note the coordinates listed under "Osmosis Copy"
+
+```python
+left=-1.6 bottom=50.57 right=-1.05 top=50.78
+```
+
+Inside the docker container download a pre-rendering script and run it over the area you want to download.
 ```sh
 # Run this Inside the docker container 
+
 wget https://raw.githubusercontent.com/alx77/render_list_geo.pl/master/render_list_geo.pl
 chmod +x render_list_geo.pl
 #./render_list_geo.pl -x <left> -X <right> -y <bottom> -Y <top> \
 #                     -z 0 -Z <max_zoom> -n <number_of_threads> -m ajt
-# For example to render the Isle of Wight up to zoom level 15
-./render_list_geo.pl -x -1.6 -X -1.05 -y 50.57 -Y 50.79 -z 0 -Z 15 -n 10 -m ajt
+# For example to render the Isle of Wight from zoom level 7 to 15 using 2 threads
+./render_list_geo.pl -x -1.6 -X -1.05 -y 50.57 -Y 50.79 -z 7 -Z 15 -n 2 -m ajt
 # Once it completes you can disconnect from the container
 exit
 ```
@@ -268,10 +280,10 @@ Go to http://localhost:8000 to see the local website.
 
 You can see an example of what this should look like [here](test_map.html){target="_blank}. Note that I am only serving tiles for zoom level 10, 11, and 12.
 
-**Note:** The if you have followed the instructions you currently have two tile servers running: the actual docker based tile server on port 8080, and the python static webserver on port 8000 hosting just the tiles that were rendered and downloaded. You can shut down the docker based tile server without effecting this python static webserver (See Step 6).
+**Note:** If you have followed the instructions you currently have two tile servers running: the actual docker based tile server on port 8080, and the python static webserver on port 8000 hosting just the tiles that were rendered and downloaded. You can shut down the docker based tile server without effecting this python static webserver (See Step 6).
 
 ### Step 6 - Cleaning up (Optional)
-The docker based tile server can use up a lot of drive space on your computer. It is a good idea to delete it once you have finished rendering and downloading tiles from it.
+The docker based tile server can use up a lot of drive space on your computer. It is a good idea to delete it once you have finished rendering and downloading tiles from it (unless you plan on using it as a tile server that is!).
 
 ```sh
 # Identify the name of the openstreetmap-tile-server container
@@ -280,47 +292,45 @@ docker ps -a
 docker stop <name_of_container>
 docker rm <name_of_container>
 docker volume rm openstreetmap-data
-docker image rm overv/openstreetmap-tile-server:v1.6.0
+docker image rm overv/openstreetmap-tile-server:2.2.0
 ```
 
 ### Appendix - Set up a tile server with English place names {: #english}
 By default place names are displayed in the language native to the country they are located in. If you want place names to be displayed in English, then use the follow instructions instead of those in step 2.
 
-To get this to work I forked the default OpenStreetMap CartoCSS map stylesheet [openstreetmap-carto](https://github.com/gravitystorm/openstreetmap-carto){target="_blank} and made a small modification to the ```project.mml``` file such that when the name of a place is grabbed from the map database it first checks if there is an English name, and if so uses that instead. I then created a fork of the [openstreetmap-tile-server](https://github.com/Overv/openstreetmap-tile-server){target="_blank} repo which contains the Dockerfile used to make the tile server. With this the only change I made was to point it to my fork of the openstreetmap-carto repo instead of the default one.
+To get this to work I forked the default OpenStreetMap CartoCSS map stylesheet [openstreetmap-carto](https://github.com/gravitystorm/openstreetmap-carto){target="_blank} and made a small modification to the ```project.mml``` file such that when the name of a place is grabbed from the map database it first checks if there is an English name, and if so uses that instead. My variant of the repo can be found here: [here](git clone https://github.com/jgibbard/openstreetmap-carto-english-placenames.git){target="_blank}.
 
-First build the new docker container:
+First import the map using the `project.mml` file.
 ```sh
 # If you haven't already created a volume do it now:
 docker volume create openstreetmap-data
-# Pull down my slightly modified docker container
-git clone https://github.com/jgibbard/openstreetmap-tile-server.git
-cd openstreetmap-tile-server
-git checkout v1.6.0_english_tags
-# Build the docker container
-docker build -t jg/openstreetmap-tile-server:v1.6.0_english_tags .
-```
-
-Next, import the map:
-```sh
+# Pull down my slightly modified openstreetmap-carto project
+cd ~
+git clone https://github.com/jgibbard/openstreetmap-carto-english-placenames.git
 # For the fastest possible import time, increase the number of threads to
 # match what is available on your CPU.
-# You can also adjust increase the amount of memory available to OSM2PGSQL.
-docker run -v </full/path/to/map>/<name_of_map>.osm.pbf:/data.osm.pbf \
-           -v openstreetmap-data:/var/lib/postgresql/12/main \
-           -e THREADS=2 \
+# You should also increase the amount of memory available to OSM2PGSQL to about 
+# 75% of your RAM.
+docker run -v </full/path/to/map>/<name_of_map>.osm.pbf:/data/region.osm.pbf \
+           -v openstreetmap-data:/data/database/ \
+           -v ~/openstreetmap-carto-english-placenames:/data/style/ \
+           -e THREADS=4 \
            -e "OSM2PGSQL_EXTRA_ARGS=-C 4096" \
-           jg/openstreetmap-tile-server:v1.6.0_english_tags import
+           overv/openstreetmap-tile-server:2.2.0 import
 ```
 
-Finally, once the map has been imported, you can run the tile server:
+If importing a very large `osm.pbf` file then also add the `-e "FLAT_NODES=enabled"` option to the docker command.
+
+Then, once the map has been imported, you can run the tile server:
 ```sh
 # Adjust the threads and memory as required
 docker run -p 8080:80 \
-           -v openstreetmap-data:/var/lib/postgresql/12/main -d \
-           -e THREADS=2 \
+           -v openstreetmap-data:/data/database/ -d \
+           -v ~/openstreetmap-carto-english-placenames:/data/style/ \
+           -e THREADS=4 \
            -e "OSM2PGSQL_EXTRA_ARGS=-C 4096" \
            --shm-size=256m \
-           jg/openstreetmap-tile-server:v1.6.0_english_tags run
+           overv/openstreetmap-tile-server:2.2.0 run
 ```
 
 The tile server has a built in example webpage that lets you browse the map straight away. Go to http://localhost:8080 to see the map. It will take a little while to load initially.
