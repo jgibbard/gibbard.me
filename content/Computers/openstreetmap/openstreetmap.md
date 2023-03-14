@@ -138,9 +138,9 @@ Inside the docker container download a pre-rendering script and run it over the 
 wget https://raw.githubusercontent.com/alx77/render_list_geo.pl/master/render_list_geo.pl
 chmod +x render_list_geo.pl
 #./render_list_geo.pl -x <left> -X <right> -y <bottom> -Y <top> \
-#                     -z 0 -Z <max_zoom> -n <number_of_threads> -m ajt
+#                     -z 0 -Z <max_zoom> -n <number_of_threads>
 # For example to render the Isle of Wight from zoom level 7 to 15 using 2 threads
-./render_list_geo.pl -x -1.6 -X -1.05 -y 50.57 -Y 50.79 -z 7 -Z 15 -n 2 -m ajt
+./render_list_geo.pl -x -1.6 -X -1.05 -y 50.57 -Y 50.79 -z 7 -Z 15 -n 2
 # Once it completes you can disconnect from the container
 exit
 ```
