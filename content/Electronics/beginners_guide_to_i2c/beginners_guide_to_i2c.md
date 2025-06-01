@@ -1,7 +1,7 @@
 title: Beginners Guide to I2C
 date: 2025/06/01
 description: I2C is a synchronous, half-duplex, serial, communication protocol commonly used to communicate between several integrated circuits on a PCB. This article provides a basic introduction to the protocol.
-main_image: light.svg
+main_image: i2c.svg
 
 
 I<sup>2</sup>C (or I2C) is a synchronous, half-duplex, serial, communication protocol commonly used to communicate between several integrated circuits on a PCB. I2C is often used to interface between a microcontroller and devices such as temperature sensors, accelerometers, and EEPROMs. 
